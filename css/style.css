@@ -1,0 +1,107 @@
+/* Reset básico */
+body {
+    font-family: sans, sans-serif;
+    /* background-color: #003366; */
+    background-color: #d2c8c8;
+    margin: 0;
+    padding-bottom: 60px;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main {
+    flex: 1; /* ocupa o espaço */
+    display: flex;
+}
+
+/* Rodapé */
+.page-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+
+    background-color: #003366;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+.page-footer a {
+    color: white;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+/* Header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* centraliza o título */
+    position: relative;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+    background-color: #003366;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Logo à esquerda */
+.logo {
+    position: absolute;
+    left: 20px;
+}
+
+.logo img {
+    height: 60px;
+}
+
+/* Título centralizado */
+.title h1 {
+    margin: 0;
+    color: white;
+    font-size: 28px;
+}
+
+.layout {
+    display: flex;
+    flex: 1;
+}
+
+/* Sidebar */
+.nav-bar {
+    width: 220px;
+    background-color: #003366;
+    padding-top: 20px;
+}
+
+/* Lista da navbar */
+.nav-bar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-bar li {
+    margin: 0;
+}
+
+/* Links */
+.nav-bar a {
+    display: block;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+}
+
+/* Hover bonito */
+.nav-bar a:hover {
+    background-color: #0055aa;
+}
+
+/* Conteúdo */
+.content {
+    flex: 1;
+    padding: 20px;
+}
