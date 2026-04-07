@@ -1,8 +1,14 @@
 /* Reset básico */
+* { /*mud*/
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    font-family: sans, sans-serif;
+    font-family: Arial, sans-serif;
     /* background-color: #003366; */
-    background-color: #d2c8c8;
+    background-color: #e6dddd;
     margin: 0;
     padding-bottom: 60px;
 
@@ -14,6 +20,8 @@ body {
 .main {
     flex: 1; /* ocupa o espaço */
     display: flex;
+    line-height: 1.6;
+    
 }
 
 /* Rodapé */
@@ -66,7 +74,8 @@ body {
 
 .layout {
     display: flex;
-    flex: 1;
+    min-height: calc(100vh - 90px);
+    
 }
 
 /* Sidebar */
@@ -74,6 +83,12 @@ body {
     width: 220px;
     background-color: #003366;
     padding-top: 20px;
+}
+
+.nav-bar h2 {
+      color: white;
+      font-size: 20px;
+      margin: 0 20px 15px;
 }
 
 /* Lista da navbar */
@@ -101,7 +116,116 @@ body {
 }
 
 /* Conteúdo */
-.content {
+.conteudo {
     flex: 1;
     padding: 20px;
+}
+
+.hero {
+    background-color: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.hero-text {
+    flex: 2;
+    min-width: 250px;
+}
+
+.hero-title {
+    color: #003366;
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.hero-subtitle {
+    margin-bottom: 15px;
+}
+
+
+.hero-highlight {
+    flex: 1;
+    min-width: 250px;
+    background-color: #003366;
+    color: white;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.highlight-title {
+    display: block;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.hero-highlight p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.sections-title {
+    color: #003366;
+    margin-bottom: 12px;
+    font-size: 24px;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-top: 5px solid #003366;
+}
+
+.badge {
+    display: inline-block;
+    background-color: #e4eef8;
+    color: #003366;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    color: #003366;
+    margin-bottom: 8px;
+}
+
+.card p {
+    margin-bottom: 10px;
+    font-size: 15px;
+
+}
+
+.card-footer {
+    font-size: 14px;
+    color: #555;
+}    
+
+.info-board {
+    margin-top: 24px;
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.info-board h2 {
+    color: #003366;
+    margin-bottom: 10px;
 }
