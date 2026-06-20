@@ -11,7 +11,7 @@
 
 <header class="header">
     <div class="logo">
-        <img src="../assets/logo_unirio_branca.png" alt="Logo da UNIRIO">
+        <img src="../assets/images/logo_unirio_branca.png" alt="Logo da UNIRIO">
     </div>
     <div class="title">
         <h1>Central de Oportunidades</h1>
@@ -30,6 +30,7 @@
                 <li><a href="pesquisa.html">Pesquisa</a></li>
                 <li><a href="extensao.html">Extensão</a></li>
                 <li><a href="perfil.html">Perfil do Aluno</a></li>
+                <li><a href="#" id="logout-btn">Sair</a></li>
             </ul>
         </nav>
 
@@ -45,16 +46,32 @@
 
                 <!-- INFORMAÇÕES DO USUÁRIO -->
                 <div class="card">
-                    <h2>Informações Básicas</h2>
 
+                    <h2>Informações Básicas</h2>
                     <div class="profile-grid">
-                        <div><strong>Nome:</strong><br> Fulano da Silva</div>
-                        <div><strong>Matrícula:</strong><br> 202312345</div>
-                        <div><strong>Idade:</strong><br> 21 anos</div>
-                        <div><strong>Email:</strong><br> aluno@unirio.br</div>
-                        <div><strong>Telefone:</strong><br> (21) 99999-9999</div>
-                        <div><strong>Cidade/Estado:</strong><br> Rio de Janeiro - RJ</div>
+
+                        <div>
+                            <strong>Nome:</strong><br>
+                            <span id="profile-name"></span>
+                        </div>
+
+                        <div>
+                            <strong>Matrícula:</strong><br>
+                            <span id="profile-student-id"></span>
+                        </div>
+
+                        <div>
+                            <strong>Curso:</strong><br>
+                            <span id="profile-course"></span>
+                        </div>
+
+                        <div>
+                            <strong>Email:</strong><br>
+                            <span id="profile-email"></span>
+                        </div>
+
                     </div>
+
                 </div>
 
                 <!-- SEÇÃO: ESTÁGIO -->
@@ -134,7 +151,6 @@
                 </div>
 
             </div>
-        </section>
 
     </div>
 </main>
@@ -146,6 +162,9 @@
         <a href="#">Fale Conosco</a>
     </p>
 </footer>
+
+<script src="../js/profile.js"></script>
+<script src="../js/auth.js"></script>
 
 </body>
 </html>

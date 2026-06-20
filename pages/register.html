@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cadastro - Central de Oportunidades</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<header class="header">
+    <div class="logo">
+        <img src="../assets/images/logo_unirio_branca.png" alt="Logo UNIRIO">
+    </div>
+
+    <div class="title">
+        <h1>Central de Oportunidades</h1>
+    </div>
+</header>
+
+<main class="main">
+    <section class="content">
+        <div class="container">
+
+            <div class="hero">
+                <h2>Cadastro de Aluno</h2>
+                <p>Crie sua conta para acessar as oportunidades.</p>
+            </div>
+
+            <div class="card">
+
+                <form id="register-form">
+
+                    <label for="first-name">
+                        Nome
+                    </label>
+
+                    <input
+                        type="text"
+                        id="first-name"
+                        required
+                    >
+
+                    <small id="first-name-error"></small>
+
+                    <label for="last-name">
+                        Sobrenome
+                    </label>
+
+                    <input
+                        type="text"
+                        id="last-name"
+                        required
+                    >
+
+                    <small id="last-name-error"></small>
+
+                    <label for="student-id">
+                        Matrícula
+                    </label>
+
+                    <input
+                        type="text"
+                        id="student-id"
+                        required
+                    >
+
+                    <small id="student-id-error"></small>
+
+                    <label for="course">
+                        Curso
+                    </label>
+
+                    <input
+                        type="text"
+                        id="course"
+                        required
+                    >
+
+                    <small id="course-error"></small>
+
+                    <label for="email">
+                        Email Institucional
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        required
+                    >
+
+                    <small id="email-error"></small>
+
+                    <label for="password">
+                        Senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        required
+                    >
+
+                    <small id="password-error"></small>
+
+                    <label for="confirm-password">
+                        Confirmar Senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirm-password"
+                        required
+                    >
+
+                    <small id="confirm-password-error"></small>
+
+                    <button type="submit">
+                        Cadastrar
+                    </button>
+
+                    <p>
+                        Já possui conta?
+                        <a href="login.html">
+                            Entrar
+                        </a>
+                    </p>
+                </form>
+
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<footer class="page-footer">
+    <p>Central de Oportunidades UNIRIO</p>
+</footer>
+
+<script src="../js/validation.js"></script>
+<script src="../js/crypto.js"></script>
+<script src="../js/auth.js"></script>
+
+</body>
+</html>
