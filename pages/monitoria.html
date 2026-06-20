@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 
-<body>
+<body data-pagina="monitoria">
 
 <header class="header">
     <div class="logo">
@@ -45,7 +45,7 @@
                 <!-- STATS -->
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <h3>8</h3>
+                        <h3 id="stat-abertas">0</h3>
                         <p>Monitorias com inscrições abertas</p>
                     </div>
                     <div class="stat-card">
@@ -53,69 +53,22 @@
                         <p>Inscrições encerrando essa semana</p>
                     </div>
                     <div class="stat-card">
-                        <h3>25</h3>
+                        <h3 id="stat-vagas">0</h3>
                         <p>Total de vagas disponíveis</p>
                     </div>
                 </div>
 
+                 <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Pesquisar oportunidade...">
+                </div>
+                
                 <!-- DESTAQUES -->
                 <h2>Destaques</h2>
-
-                <div class="cards-grid">
-
-                    <div class="card highlight">
-                        <h3>Cálculo I <span class="badge">Alta demanda</span></h3>
-                        <p>Apoio em exercícios e monitorias presenciais.</p>
-                        <p><strong>Professor:</strong> João Silva</p>
-                        <p><strong>Carga horária:</strong> 8h semanais</p>
-                        <p><strong>Vagas:</strong> 5</p>
-                        <a href="#">Participar</a>
-                    </div>
-
-                    <div class="card highlight">
-                        <h3>Programação em C <span class="badge">Novo</span></h3>
-                        <p>Auxílio em lógica e desenvolvimento de algoritmos.</p>
-                        <p><strong>Professor:</strong> Maria Souza</p>
-                        <p><strong>Carga horária:</strong> 6h semanais</p>
-                        <p><strong>Vagas:</strong> 4</p>
-                        <a href="#">Participar</a>
-                    </div>
-
-                </div>
+                <div class="cards-grid"></div>
 
                 <!-- TODAS -->
                 <h2>Todas as Monitorias</h2>
-
-                <div class="cards-grid">
-
-                    <div class="card">
-                        <h3>Banco de Dados</h3>
-                        <p>Modelagem e SQL.</p>
-                        <p><strong>Professor:</strong> Carlos Lima</p>
-                        <p><strong>Carga horária:</strong> 6h semanais</p>
-                        <p><strong>Vagas:</strong> 3</p>
-                        <a href="#">Participar</a>
-                    </div>
-
-                    <div class="card">
-                        <h3>Estruturas de Dados</h3>
-                        <p>Listas, árvores e algoritmos.</p>
-                        <p><strong>Professor:</strong> Fernanda Rocha</p>
-                        <p><strong>Carga horária:</strong> 8h semanais</p>
-                        <p><strong>Vagas:</strong> 4</p>
-                        <a href="#">Participar</a>
-                    </div>
-
-                    <div class="card">
-                        <h3>Sistemas Operacionais</h3>
-                        <p>Processos e gerenciamento de memória.</p>
-                        <p><strong>Professor:</strong> André Martins</p>
-                        <p><strong>Carga horária:</strong> 6h semanais</p>
-                        <p><strong>Vagas:</strong> 3</p>
-                        <a href="#">Participar</a>
-                    </div>
-
-                </div>
+                <div class="cards-grid"></div>
 
             </div>
         </section>
