@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // 1. AUTENTICAÇÃO E SESSÃO
     const session = JSON.parse(localStorage.getItem("session"));
     const currentPage = window.location.pathname;
 
@@ -8,13 +9,26 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!session && !isLoginPage && !isRegisterPage) {
         const insidePages = currentPage.includes("/pages/");
         window.location.href = insidePages ? "login.html" : "pages/login.html";
-        return;
+        return; // Para a execução se o usuário não estiver logado
     }
 
     const welcomeMessage = document.getElementById("welcome-message");
     if (session && welcomeMessage) {
         welcomeMessage.textContent = `Bem-vindo(a), ${session.firstName}!`;
     }
+
+    // 2. ROTEAMENTO DE PÁGINAS (Constrói os cards)
+    const tipoPagina = document.body.getAttribute('data-pagina');
+    
+    if (tipoPagina === 'perfil') {
+        inicializarPerfil();
+    } else if (tipoPagina) {
+        inicializarPagina(tipoPagina);
+    }
+    
+    // 3. INICIALIZADORES GERAIS
+    configurarLogout();
+    inicializarTema();
 });
 
 // 1. BANCO DE DADOS SIMULADO (Corrigido com vírgulas e chaves únicas)
@@ -47,19 +61,6 @@ const oportunidadesData = [
     { id: 3, tipo: "pesquisa", titulo: "Iniciação Científica em Inteligência Artificial", descricao: "Auxilie no desenvolvimento de modelos de IA e análise de dados para projetos acadêmicos.", instituicao: "UFRJ", orientador: "Prof. Carlos Mendes", area: "Inteligência Artificial", modalidade: "Bolsista", carga: "12h semanais", vagas: 2, destaque: false, badge: null },
     { id: 4, tipo: "pesquisa", titulo: "Pesquisa em Cibersegurança", descricao: "Auxilie na identificação de vulnerabilidades e proteção de sistemas.", instituicao: "UFF", orientador: "Profa. Renata Alves", area: "Segurança da Informação", modalidade: "Bolsista", carga: "12h semanais", vagas: 1, destaque: true, badge: "Última vaga" }
 ];
-
-document.addEventListener("DOMContentLoaded", () => {
-    const tipoPagina = document.body.getAttribute('data-pagina');
-    
-    // Roteamento: decide qual lógica rodar dependendo da página
-    if (tipoPagina === 'perfil') {
-        inicializarPerfil();
-    } else if (tipoPagina) {
-        inicializarPagina(tipoPagina);
-    }
-    
-    configurarLogout();
-});
 
 function inicializarPagina(tipoPagina) {
     const grids = document.querySelectorAll('.cards-grid');
@@ -171,6 +172,7 @@ function inicializarPerfil() {
             configurarBotoesFavoritar(); // Permite desfavoritar direto do perfil
         }
     }
+    configurarBotoesParticipar();
     configurarBotoesCancelar();
 }
 
@@ -221,10 +223,37 @@ function criarCardHTML(oportunidade, modo = 'vitrine') {
             </button>
         `;    
     } else if (modo === 'perfil-favorito') {
+        // 1. Verifica se o aluno já está inscrito nesta oportunidade específica
+        const minhasInscricoes = JSON.parse(localStorage.getItem('inscricoesAluno')) || [];
+        const jaInscrito = minhasInscricoes.some(item => item.id === oportunidade.id && item.tipo === oportunidade.tipo);
+
+        // 2. Decide qual visual o primeiro botão vai ter
+        let botaoAcaoHTML = '';
+        
+        if (jaInscrito) {
+            // Se já estiver inscrito, mostra a etiqueta cinza de status
+            botaoAcaoHTML = `
+                <div style="flex: 1; padding: 10px; background-color: #e9ecef; text-align: center; border-radius: 4px; color: #495057; font-weight: bold; display: flex; align-items: center; justify-content: center;">
+                    Em análise
+                </div>
+            `;
+        } else {
+            // Se não estiver, mostra o botão azul de inscrição normal
+            botaoAcaoHTML = `
+                <button class="btn-participar" data-id="${oportunidade.id}" data-tipo="${oportunidade.tipo}" style="flex: 1; cursor: pointer; padding: 10px; background-color: #004488; color: white; border: none; border-radius: 4px; font-weight: bold;">
+                    Inscrever-se
+                </button>
+            `;
+        }
+
+        // 3. Monta a linha com o botão escolhido + o botão vermelho de remover
         blocoBotoesHTML = `
-            <button class="btn-favoritar" data-id="${oportunidade.id}" data-tipo="${oportunidade.tipo}" style="width: 100%; margin-top: 15px; cursor: pointer; padding: 10px; background-color: #c0392b; color: white; border: none; border-radius: 4px; font-weight: bold;">
-                ❌ Remover dos Favoritos
-            </button>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                ${botaoAcaoHTML}
+                <button class="btn-favoritar" data-id="${oportunidade.id}" data-tipo="${oportunidade.tipo}" style="flex: 1; cursor: pointer; padding: 10px; background-color: #c0392b; color: white; border: none; border-radius: 4px; font-weight: bold;">
+                    ❌ Remover
+                </button>
+            </div>
         `;
     }
 
@@ -277,17 +306,22 @@ function processarInscricao(id, tipo, botaoClicado) {
             botaoClicado.innerText = "Inscrito!";
             botaoClicado.style.backgroundColor = "#28a745"; 
             botaoClicado.disabled = true;
-            botaoClicado.style.cursor = "not-allowed";
 
-            alert("Inscrição realizada com sucesso! Você pode acompanhar no seu Perfil.");
-            
-            const dadosDaPagina = oportunidadesData.filter(op => op.tipo === tipo);
-            atualizarEstatisticas(dadosDaPagina);
+            alert("Inscrição realizada com sucesso!");
+
+            // SE ESTIVER NO PERFIL: Atualiza a tela inteira para mover o card
+            if (document.body.getAttribute('data-pagina') === 'perfil') {
+                inicializarPerfil();
+            } else {
+                // SE ESTIVER NA VITRINE: Atualiza só os números do cabeçalho
+                const dadosDaPagina = oportunidadesData.filter(op => op.tipo === tipo);
+                atualizarEstatisticas(dadosDaPagina);
+            }
         }
-    } else if (oportunidade && oportunidade.vagas === 0) {
-        alert("Infelizmente não há mais vagas disponíveis.");
+        } else {
+            alert("Infelizmente não há mais vagas disponíveis.");
+        }
     }
-}
 
 // LÓGICA DE CANCELAMENTO DE INSCRIÇÃO
 function configurarBotoesCancelar() {
@@ -384,6 +418,37 @@ function configurarLogout() {
                 // Ao sair, podemos limpar as inscrições de teste, se quiser:
                 // localStorage.removeItem('inscricoesAluno');
                 window.location.href = '../index.html'; 
+            }
+        });
+    }
+}
+
+// LÓGICA DO MODO NOTURNO
+function inicializarTema() {
+    const btnToggle = document.getElementById('btn-theme-toggle');
+    const temaSalvo = localStorage.getItem('temaPreferido');
+
+    // Se o usuário já tinha escolhido escuro antes, aplica logo de cara
+    if (temaSalvo === 'dark') {
+        document.body.classList.add('dark-mode');
+        if(btnToggle) btnToggle.innerText = '☀️ Tema';
+    }
+
+    // Configura o clique do botão
+    if (btnToggle) {
+        btnToggle.addEventListener('click', (evento) => {
+            evento.preventDefault();
+            
+            // Alterna a classe na tag body
+            document.body.classList.toggle('dark-mode');
+            
+            // Verifica se ficou escuro ou claro e salva no navegador
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('temaPreferido', 'dark');
+                btnToggle.innerText = '☀️ Tema';
+            } else {
+                localStorage.setItem('temaPreferido', 'light');
+                btnToggle.innerText = '🌙 Tema';
             }
         });
     }
