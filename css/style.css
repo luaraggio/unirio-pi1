@@ -213,6 +213,21 @@ body {
     .hero h2 {
         font-size: 20px;
     }
+
+    .header {
+        flex-direction: column; /* Empilha o logo e o título */
+        padding: 15px;
+    }
+
+    .logo {
+        position: static; /* Tira o logo do modo flutuante lateral */
+        margin-bottom: 10px; /* Adiciona um espaço entre o logo e o texto */
+    }
+
+    .title h1 {
+        font-size: 22px; /* Diminui levemente a fonte do título para caber melhor */
+        text-align: center;
+    }
 }
 
 .profile-grid {

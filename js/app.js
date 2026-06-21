@@ -412,14 +412,24 @@ function atualizarEstatisticas(dadosDaPagina) {
 function configurarLogout() {
     const btnLogout = document.getElementById('logout-btn');
     if (btnLogout) {
-        btnLogout.addEventListener('click', (evento) => {
+        // Usamos onclick para garantir que esta seja a ÚNICA ação do botão
+        btnLogout.onclick = function(evento) {
             evento.preventDefault();
-            if (confirm("Tem certeza que deseja encerrar a sessão?")) {
-                // Ao sair, podemos limpar as inscrições de teste, se quiser:
-                // localStorage.removeItem('inscricoesAluno');
-                window.location.href = '../index.html'; 
+            
+            // O confirm retorna 'true' para OK e 'false' para Cancelar
+            const querSair = confirm("Tem certeza que deseja encerrar a sessão?");
+            
+            // Só executa o bloco abaixo se o aluno clicou em "OK" (true)
+            if (querSair) { 
+                localStorage.removeItem("session"); // Destrói o crachá de acesso
+                
+                const currentPage = window.location.pathname;
+                const insidePages = currentPage.includes("/pages/");
+                
+                window.location.href = insidePages ? "login.html" : "pages/login.html";
             }
-        });
+            // Se clicar em Cancelar, o if é ignorado e a página continua intacta.
+        };
     }
 }
 

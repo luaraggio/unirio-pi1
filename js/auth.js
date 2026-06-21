@@ -2,8 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setupRegister();
     setupLogin();
-    setupLogout();
-
+    
 });
 
 function setupRegister() {
@@ -249,32 +248,6 @@ function setupLogin() {
 
             window.location.href =
                 "../index.html";
-
-        }
-    );
-}
-
-function setupLogout() {
-
-    const logoutButton =
-        document.getElementById("logout-btn");
-
-    if (!logoutButton) {
-        return;
-    }
-
-    logoutButton.addEventListener(
-        "click",
-        (event) => {
-
-            event.preventDefault();
-
-            localStorage.removeItem(
-                "session"
-            );
-
-            window.location.href =
-                "pages/login.html";
 
         }
     );
