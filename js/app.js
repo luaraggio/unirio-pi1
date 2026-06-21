@@ -116,26 +116,14 @@ function renderizarCards(dados, grids) {
 
     // Como os botões foram recriados, precisamos religar os eventos de clique
     configurarBotoesParticipar();
+    configurarBotoesFavoritar();
 }
 
+// INICIALIZADOR DO PERFIL (Separando Inscrições e Favoritos)
 function inicializarPerfil() {
-    // Encontra a div principal onde vamos colocar tudo (mantenha a <div id="grid-perfil"></div> no seu HTML)
-    const containerPerfil = document.querySelector('#grid-perfil');
-    if (!containerPerfil) return;
+    const containerInscricoes = document.getElementById('container-inscricoes');
+    const containerFavoritos = document.getElementById('container-favoritos');
 
-    // Busca as inscrições salvas no localStorage
-    const minhasInscricoes = JSON.parse(localStorage.getItem('inscricoesAluno')) || [];
-
-    // Limpa o conteúdo anterior
-    containerPerfil.innerHTML = '';
-
-    // Se não houver inscrições, exibe a mensagem padrão e para por aqui
-    if (minhasInscricoes.length === 0) {
-        containerPerfil.innerHTML = '<p>Você ainda não se inscreveu em nenhuma oportunidade.</p>';
-        return;
-    }
-
-    // Dicionário para traduzir o 'tipo' do código para um Título bonito na tela
     const nomesCategorias = {
         monitoria: "Monitorias",
         estagio: "Estágios",
@@ -143,47 +131,51 @@ function inicializarPerfil() {
         pesquisa: "Projetos de Pesquisa"
     };
 
-    // Variável para ir guardando o HTML que vamos construir
-    let htmlFinal = '';
-
-    // O loop passa por cada tipo (monitoria, estagio, extensao, pesquisa)
-    for (const tipo in nomesCategorias) {
-        
-        // Filtra a lista do aluno para pegar apenas as inscrições da categoria atual do loop
-        const inscricoesDestaCategoria = minhasInscricoes.filter(op => op.tipo === tipo);
-
-        // Se o aluno tiver alguma inscrição nesta categoria, criamos a seção dela!
-        if (inscricoesDestaCategoria.length > 0) {
-            
-            // Cria um título com uma linha embaixo para separar visualmente
-            htmlFinal += `
-                <h3 style="margin-top: 30px; margin-bottom: 15px; color: #004488; border-bottom: 2px solid #ccc; padding-bottom: 5px;">
-                    ${nomesCategorias[tipo]}
-                </h3>
-            `;
-            
-            // Abre uma nova grid de cards para esta categoria
-            htmlFinal += `<div class="cards-grid">`;
-            
-            // Adiciona cada card dentro desta nova grid
-            inscricoesDestaCategoria.forEach(oportunidade => {
-                htmlFinal += criarCardHTML(oportunidade, true); // O 'true' avisa que é perfil (mostra 'Em análise')
-            });
-            
-            // Fecha a grid
-            htmlFinal += `</div>`;
+    // 1. PROCESSAR SEÇÃO DE INSCRIÇÕES
+    if (containerInscricoes) {
+        const minhasInscricoes = JSON.parse(localStorage.getItem('inscricoesAluno')) || [];
+        if (minhasInscricoes.length === 0) {
+            containerInscricoes.innerHTML = '<p>Você ainda não se inscreveu em nenhuma oportunidade.</p>';
+        } else {
+            let htmlInscricoes = '';
+            for (const tipo in nomesCategorias) {
+                const filtrados = minhasInscricoes.filter(op => op.tipo === tipo);
+                if (filtrados.length > 0) {
+                    htmlInscricoes += `<h3 style="margin-top:20px; color:#004488; border-bottom:1px solid #ccc;">${nomesCategorias[tipo]}</h3>`;
+                    htmlInscricoes += `<div class="cards-grid">`;
+                    filtrados.forEach(op => htmlInscricoes += criarCardHTML(op, 'perfil-inscrito'));
+                    htmlInscricoes += `</div>`;
+                }
+            }
+            containerInscricoes.innerHTML = htmlInscricoes;
         }
     }
 
-    // Injeta todo esse HTML estruturado de uma vez só dentro da div principal
-    containerPerfil.innerHTML = htmlFinal;
-
-    // REMOVA a classe 'cards-grid' da div principal, pois agora criamos grids internas!
-    containerPerfil.classList.remove('cards-grid');
+    // 2. PROCESSAR SEÇÃO DE FAVORITOS
+    if (containerFavoritos) {
+        const meusFavoritos = JSON.parse(localStorage.getItem('favoritosAluno')) || [];
+        if (meusFavoritos.length === 0) {
+            containerFavoritos.innerHTML = '<p>Você ainda não favoritou nenhuma oportunidade.</p>';
+        } else {
+            let htmlFavoritos = '';
+            for (const tipo in nomesCategorias) {
+                const filtrados = meusFavoritos.filter(op => op.tipo === tipo);
+                if (filtrados.length > 0) {
+                    htmlFavoritos += `<h3 style="margin-top:20px; color:#e67e22; border-bottom:1px solid #ccc;">${nomesCategorias[tipo]} (Salvas)</h3>`;
+                    htmlFavoritos += `<div class="cards-grid">`;
+                    filtrados.forEach(op => htmlFavoritos += criarCardHTML(op, 'perfil-favorito'));
+                    htmlFavoritos += `</div>`;
+                }
+            }
+            containerFavoritos.innerHTML = htmlFavoritos;
+            configurarBotoesFavoritar(); // Permite desfavoritar direto do perfil
+        }
+    }
+    configurarBotoesCancelar();
 }
 
-// Adicionamos o parâmetro `isPerfil` (falso por padrão) para mudar o visual do card no perfil
-function criarCardHTML(oportunidade, isPerfil = false) {
+// FABRICA DE CARDS DINÂMICOS
+function criarCardHTML(oportunidade, modo = 'vitrine') {
     const badgeHTML = oportunidade.badge ? `<span class="badge">${oportunidade.badge}</span>` : '';
     const highlightClass = oportunidade.destaque ? 'highlight' : '';
 
@@ -191,19 +183,49 @@ function criarCardHTML(oportunidade, isPerfil = false) {
     if (oportunidade.tipo === "monitoria") {
         detalhesHTML = `<p><strong>Professor:</strong> ${oportunidade.prof}</p><p><strong>Carga horária:</strong> ${oportunidade.carga}h semanais</p>`;
     } else if (oportunidade.tipo === "estagio") {
-        detalhesHTML = `<p><strong>Empresa:</strong> ${oportunidade.empresa} (${oportunidade.local})</p><p><strong>Salário/Bolsa:</strong> ${oportunidade.salario}</p>`;
+        detalhesHTML = `<p><strong>Empresa:</strong> ${oportunidade.empresa} (${oportunidade.local})</p><p><strong>Salário:</strong> ${oportunidade.salario}</p>`;
     } else if (oportunidade.tipo === "extensao") {
         detalhesHTML = `<p><strong>Coordenação:</strong> ${oportunidade.coordenacao}</p><p><strong>Parceria:</strong> ${oportunidade.parceria_local}</p>`;
     } else if (oportunidade.tipo === "pesquisa") {
-        detalhesHTML = `<p><strong>Instituição:</strong> ${oportunidade.instituicao}</p><p><strong>Orientador:</strong> ${oportunidade.orientador}</p>`;
+        detalhesHTML = `<p><strong>Instituição:</strong> ${oportunidade.instituicao}</p><p><strong>Modalidade:</strong> ${oportunidade.modalidade}</p>`;
     }
 
-    // Se estivermos no Perfil, mostramos um status em vez do botão de inscrição
-    let botaoHTML = '';
-    if (isPerfil) {
-        botaoHTML = `<div style="margin-top: 15px; padding: 10px; background-color: #e9ecef; text-align: center; border-radius: 4px; color: #495057; font-weight: bold;">Status: Em análise</div>`;
-    } else {
-        botaoHTML = `<button class="btn-participar" data-id="${oportunidade.id}" data-tipo="${oportunidade.tipo}" style="cursor: pointer; padding: 10px; background-color: #004488; color: white; border: none; border-radius: 4px; margin-top: 10px; width: 100%;">Inscrever-se</button>`;
+    // Checa se o item atual já está favoritado para renderizar o botão com a cor certa
+    const favoritosAtuais = JSON.parse(localStorage.getItem('favoritosAluno')) || [];
+    const estaFavoritado = favoritosAtuais.some(f => f.id === oportunidade.id && f.tipo === oportunidade.tipo);
+    
+    const textoBotaoFav = estaFavoritado ? "★ Favoritado" : "☆ Favoritar";
+    const corBotaoFav = estaFavoritado ? "#e67e22" : "#7f8c8d";
+
+    let blocoBotoesHTML = '';
+
+    if (modo === 'vitrine') {
+        blocoBotoesHTML = `
+            <p><strong>Vagas:</strong> <span id="vagas-${oportunidade.tipo}-${oportunidade.id}">${oportunidade.vagas}</span></p>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button class="btn-participar" data-id="${oportunidade.id}" data-tipo="${oportunidade.tipo}" style="flex: 2; cursor: pointer; padding: 10px; background-color: #004488; color: white; border: none; border-radius: 4px; font-weight: bold;">
+                    Inscrever-se
+                </button>
+                <button class="btn-favoritar" data-id="${oportunidade.id}" data-tipo="${oportunidade.tipo}" style="flex: 1; cursor: pointer; padding: 10px; background-color: ${corBotaoFav}; color: white; border: none; border-radius: 4px; font-weight: bold;">
+                    ${textoBotaoFav}
+                </button>
+            </div>
+        `;
+    } else if (modo === 'perfil-inscrito') {
+        blocoBotoesHTML = `
+            <div style="margin-top: 15px; padding: 10px; background-color: #e9ecef; text-align: center; border-radius: 4px; color: #495057; font-weight: bold; margin-bottom: 10px;">
+                Status: Em análise
+            </div>
+            <button class="btn-cancelar" data-id="${oportunidade.id}" data-tipo="${oportunidade.tipo}" style="width: 100%; cursor: pointer; padding: 10px; background-color: #c0392b; color: white; border: none; border-radius: 4px; font-weight: bold;">
+                ❌ Cancelar Inscrição
+            </button>
+        `;    
+    } else if (modo === 'perfil-favorito') {
+        blocoBotoesHTML = `
+            <button class="btn-favoritar" data-id="${oportunidade.id}" data-tipo="${oportunidade.tipo}" style="width: 100%; margin-top: 15px; cursor: pointer; padding: 10px; background-color: #c0392b; color: white; border: none; border-radius: 4px; font-weight: bold;">
+                ❌ Remover dos Favoritos
+            </button>
+        `;
     }
 
     return `
@@ -211,15 +233,13 @@ function criarCardHTML(oportunidade, isPerfil = false) {
             <h3>${oportunidade.titulo} ${badgeHTML}</h3>
             <p>${oportunidade.descricao}</p>
             ${detalhesHTML}
-            ${!isPerfil ? `<p><strong>Vagas:</strong> <span id="vagas-${oportunidade.tipo}-${oportunidade.id}">${oportunidade.vagas}</span></p>` : ''}
-            ${botaoHTML}
+            ${blocoBotoesHTML}
         </div>
     `;
 }
 
 function configurarBotoesParticipar() {
-    const botoes = document.querySelectorAll('.btn-participar');
-    botoes.forEach(botao => {
+    document.querySelectorAll('.btn-participar').forEach(botao => {
         botao.addEventListener('click', (evento) => {
             const id = evento.target.getAttribute('data-id');
             const tipo = evento.target.getAttribute('data-tipo');
@@ -266,6 +286,81 @@ function processarInscricao(id, tipo, botaoClicado) {
         }
     } else if (oportunidade && oportunidade.vagas === 0) {
         alert("Infelizmente não há mais vagas disponíveis.");
+    }
+}
+
+// LÓGICA DE CANCELAMENTO DE INSCRIÇÃO
+function configurarBotoesCancelar() {
+    document.querySelectorAll('.btn-cancelar').forEach(botao => {
+        botao.addEventListener('click', (evento) => {
+            const id = parseInt(evento.target.getAttribute('data-id'));
+            const tipo = evento.target.getAttribute('data-tipo');
+            processarCancelamento(id, tipo);
+        });
+    });
+}
+
+function processarCancelamento(id, tipo) {
+    if (confirm("Tem certeza que deseja cancelar sua inscrição nesta vaga?")) {
+        // 1. Puxa as inscrições atuais do localStorage
+        let minhasInscricoes = JSON.parse(localStorage.getItem('inscricoesAluno')) || [];
+        
+        // 2. Filtra a lista, removendo a oportunidade que o aluno clicou
+        minhasInscricoes = minhasInscricoes.filter(op => !(op.id === id && op.tipo === tipo));
+        
+        // 3. Salva a nova lista atualizada no localStorage
+        localStorage.setItem('inscricoesAluno', JSON.stringify(minhasInscricoes));
+
+        // 4. Devolve a vaga preenchida para a tela principal (simulado)
+        const oportunidade = oportunidadesData.find(op => op.id === id && op.tipo === tipo);
+        if (oportunidade) {
+            oportunidade.vagas += 1;
+        }
+
+        // 5. Atualiza a tela de perfil na hora para o card sumir
+        alert("Sua inscrição foi cancelada.");
+        inicializarPerfil();
+    }
+}
+
+// LOGICA DE FAVORITAR (LIGA / DESLIGA)
+function configurarBotoesFavoritar() {
+    document.querySelectorAll('.btn-favoritar').forEach(botao => {
+        botao.addEventListener('click', (evento) => {
+            const id = parseInt(evento.target.getAttribute('data-id'));
+            const tipo = evento.target.getAttribute('data-tipo');
+            processarFavorito(id, tipo, evento.target);
+        });
+    });
+}
+
+function processarFavorito(id, tipo, botaoClicado) {
+    let meusFavoritos = JSON.parse(localStorage.getItem('favoritosAluno')) || [];
+    const index = meusFavoritos.findIndex(fav => fav.id === id && fav.tipo === tipo);
+
+    // Se já estiver favoritado, remove da lista (Desfavoritar)
+    if (index > -1) {
+        meusFavoritos.splice(index, 1);
+        localStorage.setItem('favoritosAluno', JSON.stringify(meusFavoritos));
+        
+        // Se o usuário clicar para remover de dentro da tela de perfil, atualiza a tela na hora
+        if (document.body.getAttribute('data-pagina') === 'perfil') {
+            inicializarPerfil();
+        } else {
+            botaoClicado.innerText = "☆ Favoritar";
+            botaoClicado.style.backgroundColor = "#7f8c8d";
+        }
+    } 
+    // Se não estiver na lista, adiciona (Favoritar)
+    else {
+        const oportunidade = oportunidadesData.find(op => op.id === id && op.tipo === tipo);
+        if (oportunidade) {
+            meusFavoritos.push(oportunidade);
+            localStorage.setItem('favoritosAluno', JSON.stringify(meusFavoritos));
+            
+            botaoClicado.innerText = "★ Favoritado";
+            botaoClicado.style.backgroundColor = "#e67e22"; // Cor laranja para destaque
+        }
     }
 }
 
