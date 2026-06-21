@@ -258,8 +258,13 @@ function criarCardHTML(oportunidade, modo = 'vitrine') {
     }
 
     return `
-        <div class="card ${highlightClass}">
-            <h3>${oportunidade.titulo} ${badgeHTML}</h3>
+       <div class="card ${highlightClass}">
+            <h3>
+                <a href="${oportunidade.tipo}.html" title="Ir para a página de ${oportunidade.tipo}" style="text-decoration: none; color: inherit;">
+                    ${oportunidade.titulo}
+                </a> 
+                ${badgeHTML}
+            </h3>
             <p>${oportunidade.descricao}</p>
             ${detalhesHTML}
             ${blocoBotoesHTML}

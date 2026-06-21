@@ -120,6 +120,9 @@ body {
 
 .card h3 {
     margin-top: 0;
+    background-color: transparent; /* Remove a cor de fundo */
+    padding: 0; /* Remove o preenchimento que o fundo exigia */
+    border-radius: 0; 
 }
 
 .card p {
@@ -131,16 +134,6 @@ body {
 .card.highlight {
     border-left: 6px solid #0055aa;
     background-color: #f5f9ff;
-}
-
-.card a {
-    display: inline-block;
-    margin-top: 10px;
-    text-decoration: none;
-    color: white;
-    background-color: #0055aa;
-    padding: 8px 12px;
-    border-radius: 5px;
 }
 
 .badge {
@@ -347,4 +340,22 @@ body.dark-mode .badge {
     background-color: #3a2e00; /* Fundo escuro com um leve tom amarelado */
     color: #ffdd33; /* Texto amarelo claro para brilhar no escuro */
     border: 1px solid #ffdd33; /* Bordinha para definir o limite da badge */
+}
+
+/* Efeito de hover no título clicável dos cards */
+.card h3 a:hover {
+    text-decoration: underline;
+    color: #0055aa; /* Azul padrão no modo claro */
+}
+
+/* Garante que no modo escuro o hover fique de uma cor legível */
+body.dark-mode .card h3 a:hover {
+    color: #99ccff; 
+}
+
+/* Ajustando os títulos de categoria no Perfil (Modo Noturno) */
+body.dark-mode #container-inscricoes h3,
+body.dark-mode #container-favoritos h3 {
+    color: #66b2ff !important; /* Deixa com o mesmo azul claro dos nomes dos cards */
+    border-bottom-color: #444 !important; /* Escurece a linha divisória para combinar com o fundo */
 }
